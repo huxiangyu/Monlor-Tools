@@ -13,7 +13,7 @@ appname=$(basename $2 | cut -d'.' -f1)
 
 add() {
 
-	[ $(checkuci $appname) == '0' -a "$force" == '0' ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+	[ "$force" == '0' ] && checkuci $appname && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	if [ "$addtype" == '0' ]; then #检查是否安装在线插件
 		#下载插件
 		logsh "【Tools】" "正在安装【$appname】在线插件..."
@@ -27,7 +27,7 @@ add() {
 		logsh "【Tools】" "正在安装【$appname】离线插件..."
 		[ ! -f "$apppath/$appname.tar.gz" ] && logsh "【Tools】" "未找到离线安装包" && exit
 		cp $apppath/$appname.tar.gz /tmp > /dev/null 2>&1
-		[ `checkuci $appname` -eq 0 ] && logsh "【Tools】" "插件【$appname】已经安装！" && exit
+		checkuci $appname && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	fi
 
 	tar -zxvf /tmp/$appname.tar.gz -C /tmp > /dev/null 2>&1
@@ -103,7 +103,7 @@ add() {
 
 upgrade() {
 	
-	[ $(checkuci $appname) != '0' -a "$force" == '0' ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
+	checkuci $appname || [ "$force" == '0' ] && logsh "【Tools】" "【$appname】插件未安装！" && exit
 	if [ "$force" == '0' ]; then 
 		#检查更新
 		rm -rf /tmp/version.txt
@@ -113,7 +113,7 @@ upgrade() {
 		oldver=$(cat $monlorpath/apps/$appname/config/version.txt) > /dev/null 2>&1
 		[ $? -ne 0 ] && logsh "【Tools】" "$appname文件出现问题，请卸载后重新安装" && exit
 		logsh "【Tools】" "当前版本$oldver，最新版本$newver"
-		[ "`compare $newver $oldver`" == '1' ] && logsh "【Tools】" "【$appname】已经是最新版！" && exit
+		compare $newver $oldver || logsh "【Tools】" "【$appname】已经是最新版！" && exit
 		logsh "【Tools】" "版本不一致，正在更新$appname插件... "
 	fi
 	#卸载插件
@@ -136,7 +136,7 @@ upgrade() {
 
 del() {
 
-	if [ $(checkuci $appname) != '0' -a "$force" == '0' ]; then
+	if checkuci $appname || [ "$force" == '0' ]; then
 		echo -n "【$appname】插件未安装！继续卸载？[y/n] "
 		read answer
 		[ "$answer" == "n" ] && exit

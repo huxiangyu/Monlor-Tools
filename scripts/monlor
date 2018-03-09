@@ -16,7 +16,7 @@ manage() {
 	echo "0. 返回主菜单"
 	newver=$(cat /tmp/version/tools.txt) > /dev/null 2>&1
 	oldver=$(cat $monlorpath/config/version.txt)
-	[ "`compare $newver $oldver`" == '0' ] && result="有更新" || result="已是最新版"
+	compare $newver $oldver && result="有更新" || result="已是最新版"
 	echo "1. 更新工具箱[$result]"
 	echo "2. 卸载工具箱"
 	echo "3. 卸载插件"
@@ -56,9 +56,9 @@ manage() {
 		;;
 		2)
 			wgetsh $monlorpath/scripts/uninstall.sh $monlorurl/scripts/uninstall.sh
-			[ $? -eq 0 ] && uninstall.sh || echo "获取卸载脚本失败！"
+			[ $? -eq 0 ] && uninstall.sh ||
+		;; echo "获取卸载脚本失败！"
 			exit
-		;;
 		3)
 			echo "0.返回"
 			cat $Applist* | grep -n .
@@ -72,7 +72,7 @@ manage() {
 		;;
 		4)
 			read -p "确定要关闭迅雷服务？[1/0] " xunlei
-			[ `checkread $xunlei` == '0' ] && uci set monlor.tools.xunlei="$xunlei"
+			checkread $xunlei && uci set monlor.tools.xunlei="$xunlei"
 			if [ "$xunlei" == '1' ]; then
 				mv /usr/sbin/xunlei.sh /usr/sbin/xunlei.sh.bak > /dev/null 2>&1
 				killall xunlei > /dev/null 2>&1
@@ -90,7 +90,7 @@ manage() {
 		;;
 		6)
 			read -p "确定要增加Github的hosts？[1/0] " res
-			[ `checkuci $res` ] && uci set monlor.tools.hosts="$res"
+			checkread $res && uci set monlor.tools.hosts="$res"
 			result=$(cat /etc/hosts | grep -c "monlor-hosts")
 			if [ "$res" == '1' -a "$result" == '0' ]; then
 				cat $monlorpath/config/hosts.txt >> /etc/hosts
@@ -131,7 +131,7 @@ manage() {
 					ls $monlorbackup | while read line 
 					do
 						[ -f $monlorbackup/$line ] && continue
-						[ "`checkuci $line`" == '1' ] && appmanage.sh add $line -f
+						checkuci $line || appmanage.sh add $line -f
 						$monlorpath/apps/$line/script/$line.sh recover
 					done
 					# 恢复uci配置
@@ -165,7 +165,7 @@ manage() {
 		;;
 		10)
 			read -p "确定要禁止小米路由器系统自动更新？[1/0] " res
-			[ `checkread $res` == '0' ] && uci set monlor.tools.no_update="$res"
+			checkread $res && uci set monlor.tools.no_update="$res"
 			if [ "$res" == '1' ]; then
 				sed -i "/otapredownload/d" /etc/crontabs/root
 			else
@@ -206,7 +206,7 @@ menu() {
 		fi
 	done
 	echo
-	[ "`compare $newver $oldver`" == '0' ] && echo "[检测到工具箱新版本，输入u即可更新]"
+	compare $newver $oldver && echo "[检测到工具箱新版本，输入u即可更新]"
 	read -p "请输入你的选择(exit退出)：" select
 	echo
 	[ "$select" == "exit" ] && exit
@@ -222,7 +222,7 @@ menu() {
 		elif [ "$select" -gt '0' ] && [ "$select" -le "$(cat $Applist* | wc -l)" ]; then
 			appname=$(cat $Applist* | grep -n . | grep -w $select | cut -d: -f2)
 			if [ ! -z "$appname" ]; then
-				if [ `checkuci $appname` == '0' ]; then
+				if checkuci $appname; then
 					if [ ! -z `check_update $appname` ]; then
 						read -p "是否要更新$appname插件？[1/0] " update
 						[ "$update" == '1' ] && appmanage.sh upgrade $appname 
@@ -231,7 +231,7 @@ menu() {
 					read -p "确定要安装$appname插件？[1/0] " install
 					[ "$install" = '1' ] && appmanage.sh add $appname 
 				fi
-				[ `checkuci $appname` == '0' ] && "$monlorpath"/scripts/monlor $appname && uci commit monlor
+				checkuci $appname && "$monlorpath"/scripts/monlor $appname && uci commit monlor
 			else 
 				echo "输入有误！"
 			fi
@@ -249,7 +249,7 @@ menu() {
 
 check_install() {
 
-	if [ `checkuci $1` == '0' ]; then
+	if checkuci $1; then
 		status=$($monlorpath/apps/$1/script/$1.sh status | head -1) > /dev/null 2>&1
 		[ ! -z "$status" ] && echo -n "[$status]" || echo -n "[脚本异常]"
 	else 
@@ -261,7 +261,7 @@ check_update() {
 
 	newver=$(cat /tmp/version/$1.txt) > /dev/null 2>&1
 	oldver=$(cat $monlorpath/apps/$1/config/version.txt) > /dev/null 2>&1
-	if [ ! -z "$newver" -a ! -z "$oldver" ] && [ "`compare $newver $oldver`" == '0' ]; then
+	if [ ! -z "$newver" -a ! -z "$oldver" ] && compare $newver $oldver; then
 		echo -n "[有更新]"
 	fi
 

@@ -23,9 +23,9 @@ checkuci() {
 	# 最初用来检查插件的uci是否存在，现在当插件已经安装则返回0
 	result=$(uci -q get monlor.$1)
 	if [ ! -z "$result" -a -d $monlorpath/apps/$1 ]; then
-		echo 0
+		return 0
 	else
-		echo 1
+		return 1
 	fi
 
 }
@@ -33,9 +33,9 @@ checkuci() {
 checkread() {
 	# 传入参数为0或1则返回0，否则返回1
 	if [ "$1" == '1' -o "$1" == '0' ]; then
-		echo -n '0'
+		return 0
 	else
-		echo -n '1'
+		return 1
 	fi
 }
 
@@ -43,10 +43,12 @@ cutsh() {
 	# 传入要分割的文本和要分割出的位置，以逗号分割
 	if [ ! -z "$1" -a ! -z "$2" ]; then
 		echo `echo $1 | cut -d',' -f$2`
+		return 0
 	elif [ ! -z "$1" -a -z "$2" ]; then
 		echo `xargs | cut -d',' -f$1`
+		return 0
 	else
-		echo -n
+		return 1
 	fi
 
 }
@@ -54,6 +56,7 @@ cutsh() {
 logsh() {
 	# 输出信息到/tmp/messages和标准输出
 	logger -s -p 1 -t "$1" "$2"
+	return 0
 	
 }
 
@@ -80,9 +83,9 @@ compare() {
 	done
 	# newver=$(echo -e "$ver1\n$ver2" | sort -t. -n -k 1,1 -k 2,2 -k 3,3 -k 4,4 | tail -1)
 	if [ "$newver" == "$ver2" ]; then
-		echo -n 1
+		return 1
 	elif [ "$newver" == "$ver1" ]; then
-		echo -n 0
+		return 0
 	fi
 
 }

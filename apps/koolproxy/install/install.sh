@@ -7,7 +7,7 @@ appname=koolproxy
 openssl=$monlorpath/apps/$appname/bin/data/openssl
 [ -f $openssl ] && rm -rf "$openssl"
 [ -f "$openssl"_mips ] && rm -rf "$openssl"_mips
-if [ "`checkuci $appname`" == '0' ]; then
+if checkuci $appname; then
 	ver1="`/tmp/$appname/bin/$appname -v`"
 	ver2="`$monlorpath/apps/$appname/bin/$appname -v`"
 	[ "`compare $ver1 $ver2`" != '0' ] && rm -rf /tmp/$appname/bin/$appname

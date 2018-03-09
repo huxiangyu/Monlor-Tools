@@ -45,7 +45,7 @@ fi
 
 monitor() {
 	appname=$1
-	[ `checkuci $appname` -eq 1 ] && return
+	checkuci $appname || return
 	service=`uci -q get monlor.$1.service`
 	if [ -z $appname ] || [ -z $service ]; then
 		logsh "【Tools】" "uci配置出现问题！"

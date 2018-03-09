@@ -21,7 +21,7 @@ if [ "$1" != "-f" ]; then
 	logsh "【Tools】" "当前版本$oldver，最新版本$newver"
 	command -v compare > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
-		[ "`compare $newver $oldver`" == '1' ] && logsh "【Tools】" "工具箱已经是最新版！" && exit
+		compare $newver $oldver || logsh "【Tools】" "工具箱已经是最新版！" && exit
 	else
 		[ "$newver" == "$oldver" ] && logsh "【Tools】" "工具箱已经是最新版！" && exit
 	fi
