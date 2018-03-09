@@ -113,7 +113,7 @@ upgrade() {
 		oldver=$(cat $monlorpath/apps/$appname/config/version.txt) > /dev/null 2>&1
 		[ $? -ne 0 ] && logsh "【Tools】" "$appname文件出现问题，请卸载后重新安装" && exit
 		logsh "【Tools】" "当前版本$oldver，最新版本$newver"
-		compare $newver $oldver || logsh "【Tools】" "【$appname】已经是最新版！" && exit
+		compare $newver $oldver || (logsh "【Tools】" "【$appname】已经是最新版！" && exit)
 		logsh "【Tools】" "版本不一致，正在更新$appname插件... "
 	fi
 	#卸载插件
