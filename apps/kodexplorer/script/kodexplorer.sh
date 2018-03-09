@@ -176,7 +176,7 @@ stop () {
 		/opt/etc/init.d/S80nginx stop >> /tmp/messages 2>&1
 	fi
 	killall php-cgi >> /tmp/messages 2>&1
-	kill -9 $(ps | grep 'php-cgi' | grep -v sysa | grep -v grep | awk '{print$1}') > /dev/null 2>&1
+	kill -9 $(ps | grep 'nginx' | grep -v sysa | grep -v grep | awk '{print$1}') > /dev/null 2>&1
 	umount $WWW/data/User/admin/home > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
 

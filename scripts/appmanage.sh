@@ -30,6 +30,7 @@ add() {
 		checkuci $appname && logsh "【Tools】" "插件【$appname】已经安装！" && exit
 	fi
 
+	logsh "【Tools】" "解压【$appname】安装文件"
 	tar -zxvf /tmp/$appname.tar.gz -C /tmp > /dev/null 2>&1
 	if [ $? -ne 0 ]; then
 		logsh "【Tools】" "解压【$appname】文件失败！" 
