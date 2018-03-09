@@ -12,10 +12,10 @@ monlorbackup="/etc/monlorbackup"
 [ -z "$userdisk" ] && userdisk="$monlorpath"
 lanip=$(uci get network.lan.ipaddr)
 
-result=$(cat /proc/xiaoqiang/model)
-if [ "$result" == "R1D" -o "$result" == "R2D" -o "$result" == "R3D"  ]; then
+xq=$(cat /proc/xiaoqiang/model)
+if [ "$xq" == "R1D" -o "$xq" == "R2D" -o "$xq" == "R3D"  ]; then
 	model=arm
-elif [ "$result" == "R3" -o "$result" == "R3P" -o "$result" == "R3G" -o "$result" == "R1CM" ]; then
+elif [ "$xq" == "R3" -o "$xq" == "R3P" -o "$xq" == "R3G" -o "$xq" == "R1CM" ]; then
 	model=mips
 fi
 

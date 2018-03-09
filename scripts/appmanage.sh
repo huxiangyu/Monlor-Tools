@@ -38,13 +38,22 @@ add() {
 	
 	if [ -d /tmp/$appname/bin ]; then
 		if [ "$model" == "arm" ]; then
-			rm -rf /tmp/$appname/bin/*_mips
+			rm -rf /tmp/$appname/bin/*_*
 		elif [ "$model" == "mips" ]; then
 			ls /tmp/$appname/bin | grep -v mips | while read line
 			do
+				rm -rf /tmp/$appname/bin/"$line"
+				#是文件夹
 				[ -d /tmp/$appname/bin/$line ] && continue
-				[ ! -f /tmp/$appname/bin/"$line"_mips ] && continue
-				mv /tmp/$appname/bin/"$line"_mips /tmp/$appname/bin/"$line"
+				#判断特定型号
+				if [ -f /tmp/$appname/bin/"$line"_"$xq" ]; then
+					mv -f /tmp/$appname/bin/"$line"_"$xq" /tmp/$appname/bin/"$line"
+					rm -rf /tmp/$appname/bin/"$line"_mips
+				else
+					#判断是否有mips文件
+					[ ! -f /tmp/$appname/bin/"$line"_mips ] && continue
+					mv -f /tmp/$appname/bin/"$line"_mips /tmp/$appname/bin/"$line"
+				fi
 			done
 		else 
 			logsh "【Tools】" "不支持你的路由器！"
