@@ -64,8 +64,8 @@ compare() {
 	# 版本号对比，传入在线版本和本地版本，若有更新返回0，否则返回1
 	local ver1="$1"
 	local ver2="$2"
-	[ -z "$ver1" -o -z "$ver2" ] && echo -n 1 && return
-	[ "$ver1" == "$ver2" ] && echo -n 1 && return
+	[ -z "$ver1" -o -z "$ver2" ] && return 1
+	[ "$ver1" == "$ver2" ] && return 1
 	local newver="$ver2"
 	local ver1_num=""
 	local ver2_num=""
