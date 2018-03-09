@@ -120,9 +120,6 @@ upgrade() {
 	$monlorpath/apps/$appname/script/$appname.sh stop
 	#删除插件的配置
 	logsh "【Tools】" "正在卸载【$appname】插件..."
-	# uc aaaaaaaAA	i -q del monlor.$appname
-	# uc
-	# rm -rf $monlorpath/apps/$appname > /dev/null 2>&1
 	sed -i "/script\/$appname/d" $monlorpath/scripts/dayjob.sh
 	ssline1=$(cat $monlorconf | grep -ni "【$appname】" | head -1 | cut -d: -f1)
 	ssline2=$(cat $monlorconf | grep -ni "【$appname】" | tail -1 | cut -d: -f1)
