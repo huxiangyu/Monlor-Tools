@@ -58,6 +58,7 @@ manage() {
 			wgetsh $monlorpath/scripts/uninstall.sh $monlorurl/scripts/uninstall.sh
 			[ $? -eq 0 ] && uninstall.sh || echo "获取卸载脚本失败！"
 			exit
+		;;
 		3)
 			echo "0.返回"
 			cat $Applist* | grep -n .
