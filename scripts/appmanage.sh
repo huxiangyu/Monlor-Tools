@@ -104,7 +104,7 @@ add() {
 
 upgrade() {
 	
-	[ "$force" == '0' ] && checkuci $appname || (logsh "【Tools】" "【$appname】插件未安装！" && exit)
+	[ "$force" == '0' ] && (checkuci $appname || (logsh "【Tools】" "【$appname】插件未安装！" && exit))
 	if [ "$force" == '0' ]; then 
 		#检查更新
 		rm -rf /tmp/version.txt

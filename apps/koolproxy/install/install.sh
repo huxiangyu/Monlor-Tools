@@ -10,5 +10,5 @@ openssl=$monlorpath/apps/$appname/bin/data/openssl
 if checkuci $appname; then
 	ver1="`/tmp/$appname/bin/$appname -v`"
 	ver2="`$monlorpath/apps/$appname/bin/$appname -v`"
-	[ "`compare $ver1 $ver2`" != '0' ] && rm -rf /tmp/$appname/bin/$appname
+	compare $ver1 $ver2 || rm -rf /tmp/$appname/bin/$appname
 fi
