@@ -31,7 +31,7 @@ set_config() {
 	if [ ! -z "$token" ]; then
 		sed -i "s/.*rpc-secret.*/rpc-secret=$token/" $CONF
 	else
-		sed -i "s/.*rpc-secret.*/#rpc-secret=" $CONF
+		sed -i "s/.*rpc-secret.*/#rpc-secret=/" $CONF
 	fi
 
 	sed -i "s#dir.*#dir=$path#" $CONF
