@@ -37,7 +37,7 @@ set_config() {
 		logsh "【$service】" "生成$appname本地web页面"
 		mkdir -p /www/$appname
 		wgetsh /tmp/$appname.zip $monlorurl/temp/aria-ng.zip
-		unzip /tmp/$appname.zip -d /www/$appname
+		unzip /tmp/$appname.zip -d /www/$appname > /dev/null 2>&1
 		rm -rf /tmp/$appname.zip
 	fi
 
@@ -73,6 +73,7 @@ stop () {
 	service_stop $BIN
 	ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
+	logsh "【$service】" "卸载$appname后可删除web页面/www/$appname"
 
 }
 
