@@ -16,6 +16,7 @@ port=6800
 BIN=$monlorpath/apps/$appname/bin/$appname
 CONF=$monlorpath/apps/$appname/config/$appname.conf
 LOG=/var/log/$appname.log
+WEBDIR=$monlorpath/apps/$appname/web
 port=$(uci -q get monlor.$appname.port) || port=6800
 token=$(uci -q get monlor.$appname.token)
 path=$(uci -q get monlor.$appname.path) || path="$userdisk/下载"
@@ -35,10 +36,7 @@ set_config() {
 
 	if [ ! -d /www/$appname ]; then
 		logsh "【$service】" "生成$appname本地web页面"
-		mkdir -p /www/$appname
-		wgetsh /tmp/$appname.zip $monlorurl/temp/aria-ng.zip
-		unzip /tmp/$appname.zip -d /www/$appname > /dev/null 2>&1
-		rm -rf /tmp/$appname.zip
+		ln -s $WEBDIR/AriaNG /www/$appname
 	fi
 
 }
@@ -73,7 +71,7 @@ stop () {
 	service_stop $BIN
 	ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
-	logsh "【$service】" "卸载$appname后可删除web页面/www/$appname"
+	[ -d /www/$appname ] && rm -rf /www/$appname
 
 }
 
