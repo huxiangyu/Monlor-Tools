@@ -98,7 +98,6 @@ case $1 in
 		localgit
 		github
 		coding
-		testing
 		;;
 	github)
 		localgit
