@@ -35,12 +35,12 @@ pack() {
 	cp -rf config/ monlor/config
 	cp -rf scripts/ monlor/scripts
 	#test
-	cp install.sh install_test.sh
-	if [ "`uname -s`" == "Darwin" ]; then
-		sed -i "" 's/Monlor-Tools/Monlor-Test/' install_test.sh
-	else 
-		sed -i 's/Monlor-Tools/Monlor-Test/' install_test.sh
-	fi
+	# cp install.sh install_test.sh
+	# if [ "`uname -s`" == "Darwin" ]; then
+	# 	sed -i "" 's/Monlor-Tools/Monlor-Test/' install_test.sh
+	# else 
+	# 	sed -i 's/Monlor-Tools/Monlor-Test/' install_test.sh
+	# fi
 	tar -zcvf monlor.tar.gz monlor/
 	mv monlor.tar.gz appstore/
 	rm -rf monlor/
