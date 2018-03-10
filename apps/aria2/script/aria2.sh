@@ -33,6 +33,14 @@ set_config() {
 
 	[ ! -d "$path" ] && mkdir -p $path
 
+	if [ ! -d /www/$appname ]; then
+		logsh "【$service】" "生成$appname本地web页面"
+		mkdir -p /www/$appname
+		wgetsh /tmp/$appname.zip $monlorurl/temp/aria-ng.zip
+		unzip /tmp/$appname.zip -d /www/$appname
+		rm -rf /tmp/$appname.zip
+	fi
+
 }
 
 start () {
@@ -53,7 +61,7 @@ start () {
 		exit
 	fi
 	logsh "【$service】" "启动$appname服务完成！"
-	logsh "【$service】" "推荐访问http://aria2c.com管理服务"
+	logsh "【$service】" "访问http://$lanip/$appname管理服务"
 	[ -z "$token" ] && tokentext="" || tokentext=token:"$token"@
 	logsh "【$service】" "jsonrpc地址:http://"$tokentext""$lanip":"$port"/jsonrpc"
 
